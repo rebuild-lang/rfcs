@@ -94,7 +94,7 @@ and may be implemented with the goal of eventual inclusion into Rebuild.
 During triage, every RFC will either be closed or assigned a shepherd from the
 relevant sub-team. The role of the shepherd is to move the RFC through the
 process. This starts with simply reading the RFC in detail and providing
-initial feedback. The shepherd should also solicit feedback from people who  
+initial feedback. The shepherd should also solicit feedback from people who
 are likely to have strong opinions about the RFC. When this feedback has been
 incorporated and the RFC seems to be in a steady state, the shepherd and/or
 sub-team leader will announce an FCP. In general, the idea here is to 
