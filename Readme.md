@@ -1,6 +1,8 @@
 # Rebuild RFCs
 [Rebuild RFCs]: #rebuild-rfcs
 
+## Please read the [pull requests](https://github.com/rebuild-lang/rfcs/pulls)!
+
 All intentions to change the user experience of rebuild should get feedback of 
 the community before they are implemented.
 
