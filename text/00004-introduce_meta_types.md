@@ -35,7 +35,7 @@ It might look like this:
 
 This syntax is very consistent and keeps the number of keywords low.
 
-We might wand to provide more meta types in the language. Each should be discussed in all details in a seperate RFC.
+We might want to provide more meta types in the language. Each should be discussed in all details in a seperate RFC.
 
 - `type expression : union …` - a variant type that contains one of the types
 - `type expression : actor …` - restricts access outside of the actor
