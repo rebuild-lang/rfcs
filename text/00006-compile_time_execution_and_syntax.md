@@ -73,13 +73,13 @@ def sintable = &(makesintable(360)) # forced to calculate at compile time
 end
 ```
 
-In regular functions you may use the amperand in front of argument names or types. In front of the name, will trigger that only compile time constants can be assigned. In front of types, it makes the type name behave like an argument, that will be infered for each invocation.
+In regular functions you may use the ampersand in front of argument names or types. In front of the name, it will trigger that only compile time constants can be assigned. In front of types, it makes the type name behave like an argument, that will be infered for each invocation.
 
 ```rebuild
 fn foo (
     &arg : i32, # arg is a compile time constant
     list : &T # T is the compile time type of the list argument
-    )
+    ) -> T
 end
 ```
 
