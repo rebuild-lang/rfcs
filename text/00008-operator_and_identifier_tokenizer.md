@@ -48,9 +48,19 @@ It's more difficult for unary operators like `++`, where the code may stay valid
 
 In order to cope with this I propose to introduce a separation of character sets.
 * Regular identifiers are made of letters, numbers and underscores.
-* Operator identifiers are made of a sequence of operator characters and punctuations.
+* Operator identifiers are made of symbols, emojis and punctuations that are not taken by the language itself.
 
-Operators allow to embed regular identifiers only in punctuations.
+Open and closing punctuations always have to match. This allows to place regular identifier characters in between. `{{` is not a valid operator, as the curly braces are not closed.
+
+Some valid operator examples:
+* Unicode.MathSymbols: `+` `=` `-`
+* Unicode.OtherSymbol: `®` `⌛` `⌚`
+* Unicode.OtherNumber: `½` `²`
+* Unicode.CurrencySymbol: `¢` `¥` (`$` is reserved for the language)
+* Unicode.OtherPunctuation: `?` `!` (`#,.` are reserved for the language)
+* Unicode.OpenPunctuaton: `{dotproduct}`
+* Unicode.InitialQuotePunctuation: `«cross»`
+
 With this `a+b` is always parsed into three identifiers.
 All operators are still subject to splitting the longest known operator, but regular identifiers are not.
 
