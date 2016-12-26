@@ -3,6 +3,8 @@
 
 ## Please read the [pull requests](https://github.com/rebuild-lang/rfcs/pulls)!
 
+## We made some progress on the experimental compiler. [REC](https://github.com/rebuild-lang/REC)
+
 All intentions to change the user experience of rebuild should get feedback of 
 the community before they are implemented.
 
