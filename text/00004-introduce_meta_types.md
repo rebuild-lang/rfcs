@@ -51,7 +51,7 @@ I believe it's worth to have a very consistent syntax and to keep the keyword in
 [Alternatives]: #alternatives
 
 We can keep the classical type system and try to make struct/class flexible enough to model the desired behaviors.
-> I doubt this is fully possilbe.
+> I doubt this is possible.
 
 It might also be possible to achieve the same goal with a clever macro system. 
 > This will lead to some surprises for the developer. With the proposed syntax it is at least clear that we define a type and that the behavior is somewhat restrictet to the declared type.
