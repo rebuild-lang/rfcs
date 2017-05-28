@@ -18,7 +18,7 @@ The current goal is to collect ideas, knowledge and experience with crazy ideas.
 So all ideas are just collected as [pull requests](https://github.com/rebuild-lang/rfcs/pulls).
 We value all your ideas and comments.
 
-Please read the [HowTo](https://github.com/rebuild-lang/rfcs/blob/master/Readme.md). This document explains the idea and patterns for the RFC process.
+Please read the [HowTo](https://github.com/rebuild-lang/rfcs/blob/master/HowTo.md). This document explains the idea and patterns for the RFC process.
 
 # Experimental Compiler
 [Experimental Compiler]: #experimental-compiler
