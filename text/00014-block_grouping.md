@@ -1,48 +1,44 @@
 # Block Grouping
 
-- Created: 2016-08-24 by @arBmind
+- Created: 2016-08-24 by arBmind
+- Updated: 2018-06-03 by arBmind
 
 ## Summary
 [Summary]: #summary
 
 This proposal introduces a simple but powerful rule to allow multiple block arguments in a visually pleasing way.
 
+
 ## Motivation
 [Motivation]: #motivation
 
-No language I know does this. So let's collect some points.
+Rebuild aims to give the developer almost the same power as a language designer.
 
-If we want to give developers the power to develop methods like `if-then-elsif-else`, we need multiple block arguments.
+If we want to give developers the power to develop methods like Ruby's `if-elsif-else`, we need to support multiple blocks as arguments.
+
 
 ## Detailed design
 [Detailed design]: #detailed-design
 
-The main goal is to allow visually pleasing way to pass multiple block arguments to a statement.
-
-Ruby allows one block argument.
+The Ruby language allows one block argument.
 ```ruby
 [1,2,3].each do |x|
   print x
 end
 ```
-This is both very cool but also limiting to a single block.
+These blocks in Ruby is very useful. But the developer is still limited to easily passing a single block to a function call.
 
-We have to be able to always extract the block arguments for an expression, because the parsing of the block content will happen in a different scope.
+### Block argument syntax
 
-My initial idea was to use curly braces for blocks like in C based languages.
-```
-if condition {
-    # ...
-} else {
-    # ...
-}
-```
-Now we exactly know where a block starts and ends.
+This proposal introduces the following syntax:
 
-But we still do not know where the `if` arguments end.
-The `else` might be placed on the next line. To know if this is part of the `if` arguments, we would need to know the declaration of `if`. Which we might not know because it is inside a block itself.
+- Each block starts with a colon `:` at the end of the line. Whitespaces and comments after the colon are ignored.
+- The body of each block is indented and ends with first unindented line.
+- An unindented line begins with the name of an argument or the `end` marker.
+- After an unindented argument name the value of the argument is expected.
+- An expression with blocks ends with the first unindented `end` marker.
 
-Therefor my proposal is to go for the colon `:` pattern.
+This would look like this:
 ```rebuild
 if condition:
   # true block
@@ -52,13 +48,14 @@ else:
   # else block
 end
 ```
-The `:` is always placed last on a line. Only whitespaces and comments are allowed after it.
-The `end` frames the whole invocation, no matter how many block arguments are involved.
 
-Again this rule is very simple, but very effective.
-Unlike Python with the expected `end` statement, we can catch most indentation errors.
+Please note that after `end` marker no further arguments are allowed.
 
+The recognition of blocks shall be done in the 'block grouping' filter pass without any context.
 
+### Error handling
+
+With the rules for unindented lines and the required `end` marker, we should able to catch and recover most indentation errors.
 ```rebuild
 if condition:
   # true code
@@ -68,31 +65,62 @@ if condition:
   # more code
 end
 ```
-If the line after the missing end has no colon, the grouping breaks with an error.
-The missing `end` is inserted to continue parsing.
 
-If the next line has a colon, no grouping error is recognized.
-Most likely the invocation resolution will fail.
-If it passes we have no chance to distinguish this from correct code.
+If the line after the missing end has no colon, the grouping breaks with an error. The missing `end` is inserted to continue parsing.
+
+If the next line has a colon, the grouping error is recognized by the parser should fail in recognizing the argument. A special handling should be implemented to recognize this pattern when parsing failed.
+
+There is still a possibilty that the parser succeeds unintentionally. These situations should be very rare.
 
 
 ## Drawbacks
 [Drawbacks]: #drawbacks
 
-### A missing `end` might lead to wrong grouping and strange behavior.
+### A missing `end` might lead to wrong grouping and strange behavior
 
-No perfect workaround is possible.
+We acknowledge that the error recovery is not provable. But the same applies to all alternatives and also to existing languages.
 
-### Multiple block arguments may lead to hard to read code.
+### No identifier named `end` allowed
 
-This might be true.
-But it's in the hands of the developer to use this feature to write maintainable code.
+The identifier `end` is not prohibited. Misindenting this identifier would lead to some confusion. But we might add some logic to disect the resulting error messages.
+
+Arguments that contain blocks that are named `end` might be unusable, because they cannot be named. That is a price we will have to pay for this.
+
+### Multiple block arguments may lead to hard to read code
+
+It is always in the hands of the developer to write maintainable code.
 Not allowing this will hinder good use cases as well.
+
 
 ## Alternatives
 [Alternatives]: #alternatives
 
-So far no good alternatives are known or discussed.
+### C Style curly braces
+
+The initial idea was to use curly braces for blocks like in C based languages.
+```
+if condition {
+    # ...
+} else {
+    # ...
+}
+```
+
+Using curly braces the start and end of every block is very well defined.
+
+But we run into issues with associating the `else` to the `if` call.
+Basically we would have three options:
+
+1. We require semicolons after the last block.
+2. `} else {` is required to be a one-liner.
+3. The parser is required to know and look for `else`.
+
+All of these options have significant drawbacks and were therefore discarded.
+
+1. Semicolons everywhere is very consistent but would look strange.
+2. Takes away a lot of styling freedom and is unseen in any C style language.
+3. In this case possible, but with multiple overloads this would escalate to a parsing nightmare.
+
 
 ## Unresolved questions
 [Unresolved questions]: #unresolved-questions
@@ -102,8 +130,12 @@ So far no good alternatives are known or discussed.
 Generally the visibility is hindered, so we should disallow it until we find a reasonable use case.
 Ending the arguments after `end` with another `:` colon, would be very strange.
 
-### How are block associated to function arguments?
+### How are arguments passed to the block?
 
-This topic should be discussed in a separate RFC.
+Blocks themselves have no arguments.
+The usage of blocks in Ruby is quite confusing. They are somehow a mixture of a lambda and a real code block.
 
+The blocks we use here behave like in control flow statements.
+Each block has it's own sub-scope.
 
+Adding arguments to block might be discussed in a later RFC.
